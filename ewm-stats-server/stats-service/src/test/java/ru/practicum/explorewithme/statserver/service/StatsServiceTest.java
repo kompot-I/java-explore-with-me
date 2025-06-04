@@ -54,9 +54,17 @@ class StatsServiceTest {
         List<String> uris = List.of("/test");
 
         StatWithHits stat = new StatWithHits() {
-            public String getApp() { return "test-app"; }
-            public String getUri() { return "/test"; }
-            public Long getHits() { return 99L; }
+            public String getApp() {
+                return "test-app";
+            }
+
+            public String getUri() {
+                return "/test";
+            }
+
+            public Long getHits() {
+                return 99L;
+            }
         };
 
         when(statsRepository.findByParams(start, end, uris)).thenReturn(List.of(stat));
