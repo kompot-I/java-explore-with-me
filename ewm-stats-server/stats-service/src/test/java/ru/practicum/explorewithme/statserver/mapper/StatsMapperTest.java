@@ -16,7 +16,7 @@ class StatsMapperTest {
                 .app("test")
                 .uri("/uri")
                 .ip("127.0.0.1")
-                .timestamp("2025-06-04 10:00:00")
+                .creationTime("2025-06-04 10:00:00")
                 .build();
 
         Stat stat = StatsMapper.toStatFromHitDto(hitDto);
@@ -24,6 +24,6 @@ class StatsMapperTest {
         assertThat(stat.getApp()).isEqualTo("test");
         assertThat(stat.getUri()).isEqualTo("/uri");
         assertThat(stat.getIp()).isEqualTo("127.0.0.1");
-        assertThat(stat.getTimeStamp()).isEqualTo(LocalDateTime.of(2025, 6, 4, 10, 0));
+        assertThat(stat.getCreationTime()).isEqualTo(LocalDateTime.of(2025, 6, 4, 10, 0));
     }
 }

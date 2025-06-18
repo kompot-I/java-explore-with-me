@@ -28,6 +28,6 @@ public class Stat {
 
     private String ip;
 
-    @Column(name = "time_stamp")
-    private LocalDateTime timeStamp;
+    @Column(name = "creation_time")
+    private LocalDateTime creationTime;
 }

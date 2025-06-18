@@ -32,7 +32,7 @@ class StatsServiceTest {
                 .app("test-app")
                 .uri("/test")
                 .ip("198.0.0.1")
-                .timestamp("2025-06-03 00:00:00")
+                .creationTime("2025-06-03 00:00:00")
                 .build();
 
         statsService.saveHit(hitDto);
@@ -44,7 +44,7 @@ class StatsServiceTest {
         assertThat(savedStat.getApp()).isEqualTo("test-app");
         assertThat(savedStat.getUri()).isEqualTo("/test");
         assertThat(savedStat.getIp()).isEqualTo("198.0.0.1");
-        assertThat(savedStat.getTimeStamp()).isEqualTo(LocalDateTime.of(2025, 6, 3, 0, 0, 0));
+        assertThat(savedStat.getCreationTime()).isEqualTo(LocalDateTime.of(2025, 6, 3, 0, 0, 0));
     }
 
     @Test
