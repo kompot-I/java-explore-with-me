@@ -22,7 +22,7 @@ public class StatsMapper {
         stat.setApp(hitDto.getApp());
         stat.setUri(hitDto.getUri());
         stat.setIp(hitDto.getIp());
-        stat.setCreationTime(LocalDateTime.parse(hitDto.getCreationTime(), formatter));
+        stat.setCreationTime(LocalDateTime.parse(hitDto.getTimestamp(), formatter));
         return stat;
     }
 

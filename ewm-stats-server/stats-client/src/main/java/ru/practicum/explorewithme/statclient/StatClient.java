@@ -42,7 +42,7 @@ public class StatClient extends BaseClient {
                 "app", app,
                 "uri", uri,
                 "ip", ip,
-                "creationTime", LocalDateTime.now().format(formatter)
+                "timestamp", LocalDateTime.now().format(formatter)
         );
         return post("/hit", parameters);
     }

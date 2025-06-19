@@ -32,7 +32,7 @@ class StatsServiceTest {
                 .app("test-app")
                 .uri("/test")
                 .ip("198.0.0.1")
-                .creationTime("2025-06-03 00:00:00")
+                .timestamp("2025-06-03 00:00:00")
                 .build();
 
         statsService.saveHit(hitDto);

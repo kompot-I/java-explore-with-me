@@ -16,7 +16,7 @@ class StatsMapperTest {
                 .app("test")
                 .uri("/uri")
                 .ip("127.0.0.1")
-                .creationTime("2025-06-04 10:00:00")
+                .timestamp("2025-06-04 10:00:00")
                 .build();
 
         Stat stat = StatsMapper.toStatFromHitDto(hitDto);
