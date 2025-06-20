@@ -62,8 +62,8 @@ class StatsServiceTest {
                 return "/test";
             }
 
-            public Long getHits() {
-                return 99L;
+            public Integer getHits() {
+                return 99;
             }
         };
 
@@ -72,8 +72,8 @@ class StatsServiceTest {
         List<StatDto> result = (List<StatDto>) statsService.getStats(start, end, uris, false);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getApp()).isEqualTo("test-app");
-        assertThat(result.get(0).getUri()).isEqualTo("/test");
-        assertThat(result.get(0).getHits()).isEqualTo(99L);
+        assertThat(result.getFirst().getApp()).isEqualTo("test-app");
+        assertThat(result.getFirst().getUri()).isEqualTo("/test");
+        assertThat(result.getFirst().getHits()).isEqualTo(99);
     }
 }

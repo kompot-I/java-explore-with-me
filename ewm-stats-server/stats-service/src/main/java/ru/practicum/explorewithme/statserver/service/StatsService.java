@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.statdto.HitDto;
 import ru.practicum.explorewithme.statdto.StatDto;
 import ru.practicum.explorewithme.statserver.dal.StatsRepository;
+import ru.practicum.explorewithme.statserver.exception.BadRequestException;
 import ru.practicum.explorewithme.statserver.mapper.StatsMapper;
 import ru.practicum.explorewithme.statserver.model.StatWithHits;
 
@@ -25,7 +26,11 @@ public class StatsService {
         statsRepository.save(StatsMapper.toStatFromHitDto(hitDto));
     }
 
-    public Collection<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public Collection<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws BadRequestException {
+        if (start == null) throw new BadRequestException("Start date in the filters cannot be empty");
+        if (end == null) throw new BadRequestException("End date cannot be empty in the filters");
+        if (end.isBefore(start)) throw new BadRequestException("Filters use the wrong date range.");
+
         Collection<StatWithHits> stats = unique ? statsRepository.findByParamsAndUniqueByIp(start, end, uris) : statsRepository.findByParams(start, end, uris);
         return StatsMapper.statDtoFromStatWithHits(stats);
     }
