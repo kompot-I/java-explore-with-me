@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.main.event.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.main.event.dto.EventFullDto;
 import ru.practicum.explorewithme.main.event.enums.Sorting;
@@ -39,14 +40,14 @@ public class EventControllerPublic {
         if (categories != null && categories.size() == 1 && categories.getFirst() == 0) {
             categories = null;
         }
-        statisticsClient.save("ewm-main-service", request.getRequestURI(), request.getRemoteAddr());
+        ResponseEntity<Object> resp = statisticsClient.save("ewm-main-service", request.getRequestURI(), request.getRemoteAddr());
         return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto getEventPublic(@PathVariable("eventId") Long eventId, HttpServletRequest request) {
         log.info("PUBLIC: Request was received to search for detailed information about the published event.: eventId = {}", eventId);
-        statisticsClient.save("ewm-main-service", request.getRequestURI(), request.getRemoteAddr());
+        ResponseEntity<Object> resp = statisticsClient.save("ewm-main-service", request.getRequestURI(), request.getRemoteAddr());
         return eventService.getEventPublic(eventId);
     }
 }
