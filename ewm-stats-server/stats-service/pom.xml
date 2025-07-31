@@ -12,19 +12,6 @@
 
     <artifactId>stats-service</artifactId>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>ru.practicum.explorewithme.statserver.EwmStatServerApp</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>ru.practicum</groupId>
@@ -83,4 +70,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ru.practicum.explorewithme.statserver.EwmStatServerApp</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+    </build>
 </project>
