@@ -6,6 +6,6 @@ public interface StatWithHits {
 
     String getUri();
 
-    Integer getHits();
+    Long getHits();
 
 }

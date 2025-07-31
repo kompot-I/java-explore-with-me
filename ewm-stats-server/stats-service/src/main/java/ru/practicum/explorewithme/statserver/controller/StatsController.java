@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.explorewithme.statdto.HitDto;
 import ru.practicum.explorewithme.statdto.StatDto;
-import ru.practicum.explorewithme.statserver.exception.BadRequestException;
 import ru.practicum.explorewithme.statserver.service.StatsService;
 
 import java.time.LocalDateTime;
@@ -39,7 +38,7 @@ public class StatsController {
     public Collection<StatDto> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                                         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                                         @RequestParam(value = "uris", required = false) List<String> uris,
-                                        @RequestParam(value = "unique", defaultValue = "false") Boolean unique) throws BadRequestException {
+                                        @RequestParam(value = "unique", defaultValue = "false") Boolean unique) {
         log.info("Received a request for session statistics with parameters: start={}, end={}, uris={}, unique={}", start, end, uris, unique);
         return statsService.getStats(start, end, uris, unique);
     }
