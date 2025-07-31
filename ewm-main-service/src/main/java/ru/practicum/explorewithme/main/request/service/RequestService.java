@@ -44,14 +44,15 @@ public class RequestService {
         if (requestRepository.existsByEventAndRequester(eventId, userId)) {
             throw new ConflictException("Request already exists");
         }
-        int confirmedCount = requestRepository.countByEventAndStatus(eventId, RequestState.CONFIRMED);
-        boolean autoConfirm = event.getParticipantLimit() == 0 || !event.getRequestModeration();
 
-        if (!autoConfirm && confirmedCount >= event.getParticipantLimit()) {
+        int confirmedCount = requestRepository.countByEventAndStatus(eventId, RequestState.CONFIRMED);
+        if (event.getParticipantLimit() != 0 && confirmedCount >= event.getParticipantLimit()) {
             throw new ConflictException("Limit on participants has been reached");
         }
 
-        RequestState status = autoConfirm ? RequestState.CONFIRMED : RequestState.PENDING;
+        RequestState status = (event.getParticipantLimit() == 0 || !event.getRequestModeration())
+                ? RequestState.CONFIRMED
+                : RequestState.PENDING;
         Request request = Request.builder()
                 .event(eventId)
                 .requester(userId)
