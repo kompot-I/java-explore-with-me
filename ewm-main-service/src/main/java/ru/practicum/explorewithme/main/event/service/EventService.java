@@ -361,11 +361,11 @@ public class EventService {
         LocalDateTime dateFrom = LocalDateTime.parse("1999-01-01 00:00:00", formatter);
         LocalDateTime dateTo = LocalDateTime.now();
         String[] uris = {"/events/" + eventId.toString()};
-        ResponseEntity<Object> statistic = statisticsClient.getStats(dateFrom, dateTo, uris, false);
+        ResponseEntity<Object> statistic = statisticsClient.getStats(dateFrom, dateTo, uris, true);
 
-        if (statistic != null && statistic.hasBody()) {
+        if (statistic != null && statistic.hasBody()) { // вот этот кусок
             ObjectMapper mapper = new ObjectMapper();
-            StatDto[] dto = mapper.convertValue(statistic.getBody(), StatDto[].class);
+            StatDto[] dto = mapper.convertValue(statistic.getBody(), StatDto[].class); // here need one
             Integer views = 0;
             if (dto != null && dto.length > 0) {
                 views = dto[0].getHits();

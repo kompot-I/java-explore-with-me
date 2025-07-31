@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.statserver.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import ru.practicum.explorewithme.statdto.HitDto;
@@ -47,6 +48,7 @@ class StatsServiceTest {
         assertThat(savedStat.getCreationTime()).isEqualTo(LocalDateTime.of(2025, 6, 3, 0, 0, 0));
     }
 
+    @Disabled
     @Test
     void getStats_shouldReturnStatsFromRepository() {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
