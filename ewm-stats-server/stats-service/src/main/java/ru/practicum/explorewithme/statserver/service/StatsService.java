@@ -30,7 +30,7 @@ public class StatsService {
         if (end == null) throw new BadRequestException("End date cannot be empty in the filters");
         if (end.isBefore(start)) throw new BadRequestException("Filters use the wrong date range.");
 
-        Collection<StatWithHits> stats = unique ? statsRepository.findByParamsAndUniqueByIp(start, end, null) : statsRepository.findByParams(start, end, null); // test
+        Collection<StatWithHits> stats = unique ? statsRepository.findByParamsAndUniqueByIp(start, end, uris) : statsRepository.findByParams(start, end, uris);
         return StatsMapper.statDtoFromStatWithHits(stats);
     }
 }

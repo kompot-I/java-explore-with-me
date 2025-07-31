@@ -363,9 +363,9 @@ public class EventService {
         String[] uris = {"/events/" + eventId.toString()};
         ResponseEntity<Object> statistic = statisticsClient.getStats(dateFrom, dateTo, uris, true);
 
-        if (statistic != null && statistic.hasBody()) { // вот этот кусок
+        if (statistic != null && statistic.hasBody()) {
             ObjectMapper mapper = new ObjectMapper();
-            StatDto[] dto = mapper.convertValue(statistic.getBody(), StatDto[].class); // here need one
+            StatDto[] dto = mapper.convertValue(statistic.getBody(), StatDto[].class);
             Integer views = 0;
             if (dto != null && dto.length > 0) {
                 views = dto[0].getHits();
