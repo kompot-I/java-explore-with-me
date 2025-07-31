@@ -361,7 +361,7 @@ public class EventService {
         LocalDateTime dateFrom = LocalDateTime.parse("1999-01-01 00:00:00", formatter);
         LocalDateTime dateTo = LocalDateTime.now();
         String[] uris = {"/events/" + eventId.toString()};
-        ResponseEntity<Object> statistic = statisticsClient.getStats(dateFrom, dateTo, uris, true);
+        ResponseEntity<Object> statistic = statisticsClient.getStats(dateFrom, dateTo, uris, false);
 
         if (statistic != null && statistic.hasBody()) {
             ObjectMapper mapper = new ObjectMapper();
