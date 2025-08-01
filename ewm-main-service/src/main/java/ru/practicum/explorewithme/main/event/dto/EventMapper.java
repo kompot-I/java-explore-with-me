@@ -80,4 +80,11 @@ public class EventMapper {
         }
         return event;
     }
+
+    public static EventSummaryDto toEventSummaryDto(Event event) {
+        return EventSummaryDto.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .build();
+    }
 }
