@@ -1,5 +1,7 @@
 # java-explore-with-me
 Template repository for graduation project.
+#### Link on repo :)
+> https://github.com/kompot-I/java-explore-with-me/pull/4
 
 ### Stage 1. Statistics Service
 * Collects information about the number of user requests to event lists
