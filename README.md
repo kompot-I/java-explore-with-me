@@ -16,7 +16,7 @@ Template repository for graduation project.
 
 ### Stage 3. Additional functionality
 * Functionality for working with event comments
-* Тесты по функционалу для Postman
+* Functional tests for Postman
 
 #### Admin: Comments:
 > PATCH: /admin/comments/{commentId}
