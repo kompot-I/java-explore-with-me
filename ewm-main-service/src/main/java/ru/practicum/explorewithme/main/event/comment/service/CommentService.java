@@ -87,7 +87,7 @@ public class CommentService {
                 .toList();
 
         return EventCommentFullListResponseDto.builder()
-                .event(EventMapper.toEventSummaryDto(event))
+                .eventInfo(EventMapper.toEventSummaryDto(event))
                 .comments(comments)
                 .build();
     }
@@ -101,7 +101,7 @@ public class CommentService {
                 .toList();
 
         return EventShortCommentsResponseDto.builder()
-                .event(EventMapper.toEventSummaryDto(event))
+                .eventInfo(EventMapper.toEventSummaryDto(event))
                 .comments(comments)
                 .build();
     }

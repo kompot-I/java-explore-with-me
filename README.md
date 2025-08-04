@@ -58,3 +58,13 @@ Template repository for graduation project.
 > GET: events/{eventId}/comments
 >
 > Getting all user comments published by the administrator (based on accepted) by event `eventId`, at the output we get `DTO.EventShortCommentsResponseDto`
+> 
+#### Description of the queries
+> The endpoints `/users/{userId}/events/{eventId}/comments` and `/events/{eventId}/comments`
+> return not only a list of comments, but also a brief description of the associated event in the form of EventSummaryDto.
+>
+> This approach was chosen to comply with the expected response format in the Postman collection and simplifies 
+> client-side rendering by avoiding additional requests for event data.
+>
+> Comments are tightly coupled to events and cannot exist independently. 
+> Therefore, the response format reflects this dependency.

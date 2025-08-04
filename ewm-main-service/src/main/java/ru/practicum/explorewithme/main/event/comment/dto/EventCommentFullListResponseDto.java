@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @Builder
 public class EventCommentFullListResponseDto {
-    private EventSummaryDto event;
+    private EventSummaryDto eventInfo;
     private List<CommentFullResponseDto> comments;
 }
