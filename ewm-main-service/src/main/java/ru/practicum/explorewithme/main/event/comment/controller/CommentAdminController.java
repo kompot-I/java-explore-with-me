@@ -20,28 +20,28 @@ public class CommentAdminController {
     private final CommentService commentService;
 
     @PatchMapping("/{commentId}")
-    public CommentDto updateCommentAdmin(@PathVariable(value = "commentId") Long commentId,
-                                         @Valid @RequestBody CommentAdminRequest dto) {
+    public CommentDto updateComment(@PathVariable(value = "commentId") Long commentId,
+                                    @Valid @RequestBody CommentAdminRequest dto) {
         log.info("ADMIN: Received a request to edit a user comment: commentId={}", commentId);
         return commentService.updateCommentByAdmin(commentId, dto);
     }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCommentAdmin(@PathVariable(value = "commentId") Long commentId) {
+    public void deleteComment(@PathVariable(value = "commentId") Long commentId) {
         log.info("ADMIN: Received a request to delete a user comment: commentId={}", commentId);
         commentService.deleteCommentByAdmin(commentId);
     }
 
     @GetMapping("/{commentId}")
-    public CommentDto getCommentAdmin(@PathVariable(value = "commentId") Long commentId) {
+    public CommentDto getComment(@PathVariable(value = "commentId") Long commentId) {
         log.info("ADMIN: Received a request to select a user comment: commentId={}", commentId);
         return commentService.getCommentByAdmin(commentId);
     }
 
     @GetMapping()
-    public Collection<CommentDto> getCommentsAdmin(@RequestParam(defaultValue = "0") Integer from,
-                                                   @RequestParam(defaultValue = "10") Integer size) {
+    public Collection<CommentDto> getComments(@RequestParam(defaultValue = "0") Integer from,
+                                              @RequestParam(defaultValue = "10") Integer size) {
         log.info("ADMIN: Received a request to select all unpublished user comments");
         return commentService.getCommentsByAdmin(from, size);
     }
