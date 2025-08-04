@@ -15,13 +15,11 @@ import ru.practicum.explorewithme.main.event.model.Event;
 import ru.practicum.explorewithme.main.exception.ConflictException;
 import ru.practicum.explorewithme.main.exception.NotFoundException;
 import ru.practicum.explorewithme.main.user.dal.UserRepository;
-import ru.practicum.explorewithme.main.user.dto.UserMapper;
 import ru.practicum.explorewithme.main.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,14 +43,13 @@ public class CommentService {
         comment.setModifyDate(LocalDateTime.now());
 
         comment = commentRepository.save(comment);
-        return CommentMapper
-                .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
+        return CommentMapper.toCommentDto(comment);
     }
 
     @Transactional
     public CommentDto updateCommentPrivate(Long userId, Long eventId, Long commentId, CommentUserRequest dto) {
-        User user = findUserById(userId);
-        Event event = findEventById(eventId);
+        findUserById(userId);
+        findEventById(eventId);
         Comment comment = findCommentById(commentId);
 
         if (!comment.getUser().getId().equals(userId)) {
@@ -65,31 +62,30 @@ public class CommentService {
         comment.setUserMessage(dto.getMessage());
         comment.setModifyDate(LocalDateTime.now());
         comment = commentRepository.save(comment);
-        return CommentMapper
-                .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
+        return CommentMapper.toCommentDto(comment);
     }
 
     public CommentDto getCommentPrivate(Long userId, Long eventId, Long commentId) {
-        User user = findUserById(userId);
-        Event event = findEventById(eventId);
+        findUserById(userId);
+        findEventById(eventId);
         Comment comment = findCommentById(commentId);
 
         if (!comment.getUser().getId().equals(userId)) {
             throw new ConflictException("Cannot access other users' comments.");
         }
 
-        return CommentMapper
-                .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
+        return CommentMapper.toCommentDto(comment);
     }
 
     public EventCommentFullListResponseDto getCommentsPrivate(Long userId, Long eventId, Integer from, Integer size) {
-        User user = findUserById(userId);
+        findUserById(userId);
         Event event = findEventById(eventId);
 
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<CommentFullResponseDto> comments = commentRepository.getEventUserComments(eventId, userId, pageable).stream()
-                .map(comment -> CommentMapper.toCommentFullResponseDto(comment, UserMapper.toUserShortDto(user)))
+                .map(CommentMapper::toCommentFullResponseDto)
                 .toList();
+
         return EventCommentFullListResponseDto.builder()
                 .event(EventMapper.toEventSummaryDto(event))
                 .comments(comments)
@@ -101,10 +97,9 @@ public class CommentService {
 
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<CommentShortResponseDto> comments = commentRepository.getEventComments(eventId, pageable).stream()
-                .map(comment -> {
-                    User user = comment.getUser();
-                    return CommentMapper.toCommentShortResponseDto(comment, UserMapper.toUserShortDto(user));
-                }).toList();
+                .map(CommentMapper::toCommentShortResponseDto)
+                .toList();
+
         return EventShortCommentsResponseDto.builder()
                 .event(EventMapper.toEventSummaryDto(event))
                 .comments(comments)
@@ -114,8 +109,6 @@ public class CommentService {
     @Transactional
     public CommentDto updateCommentByAdmin(Long commentId, CommentAdminRequest dto) {
         Comment comment = findCommentById(commentId);
-        User user = comment.getUser();
-        Event event = comment.getEvent();
 
         if (dto.getMessage() != null) {
             comment.setAdminMessage(dto.getMessage());
@@ -126,8 +119,7 @@ public class CommentService {
 
         comment.setModifyDate(LocalDateTime.now());
         comment = commentRepository.save(comment);
-        return CommentMapper
-                .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
+        return CommentMapper.toCommentDto(comment);
     }
 
     @Transactional
@@ -138,21 +130,14 @@ public class CommentService {
 
     public CommentDto getCommentByAdmin(Long commentId) {
         Comment comment = findCommentById(commentId);
-        User user = comment.getUser();
-        Event event = comment.getEvent();
-
-        return CommentMapper
-                .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
+        return CommentMapper.toCommentDto(comment);
     }
 
     public Collection<CommentDto> getCommentsByAdmin(Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         return commentRepository.getCommentsAdmin(pageable).stream()
-                .map(comment -> {
-                    User user = comment.getUser();
-                    Event event = comment.getEvent();
-                    return CommentMapper.toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
-                }).collect(Collectors.toList());
+                .map(CommentMapper::toCommentDto)
+                .toList();
     }
 
     private User findUserById(Long userId) {
