@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.explorewithme.main.event.model.Event;
+import ru.practicum.explorewithme.main.user.model.User;
 
 import java.time.LocalDateTime;
 
@@ -25,11 +27,13 @@ public class Comment {
     @Column(name = "modify_date")
     private LocalDateTime modifyDate;
 
-    @Column(name = "event_id")
-    private Long eventId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "user_message")
     private String userMessage;

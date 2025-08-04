@@ -38,8 +38,8 @@ public class CommentService {
         Event event = findEventById(eventId);
 
         Comment comment = CommentMapper.toCommentModel(dto);
-        comment.setUserId(userId);
-        comment.setEventId(eventId);
+        comment.setUser(user);
+        comment.setEvent(event);
         comment.setAccepted(false);
         comment.setCreatedDate(LocalDateTime.now());
         comment.setModifyDate(LocalDateTime.now());
@@ -55,7 +55,7 @@ public class CommentService {
         Event event = findEventById(eventId);
         Comment comment = findCommentById(commentId);
 
-        if (!comment.getUserId().equals(userId)) {
+        if (!comment.getUser().getId().equals(userId)) {
             throw new ConflictException("Cannot edit other users' comments");
         }
         if (comment.getAccepted().equals(true)) {
@@ -74,7 +74,7 @@ public class CommentService {
         Event event = findEventById(eventId);
         Comment comment = findCommentById(commentId);
 
-        if (!comment.getUserId().equals(userId)) {
+        if (!comment.getUser().getId().equals(userId)) {
             throw new ConflictException("Cannot access other users' comments.");
         }
 
@@ -102,7 +102,7 @@ public class CommentService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<CommentShortResponseDto> comments = commentRepository.getEventComments(eventId, pageable).stream()
                 .map(comment -> {
-                    Long userId = comment.getUserId();
+                    Long userId = comment.getUser().getId();
                     User user = findUserById(userId);
                     return CommentMapper.toCommentShortResponseDto(comment, UserMapper.toUserShortDto(user));
                 }).toList();
@@ -115,8 +115,8 @@ public class CommentService {
     @Transactional
     public CommentDto updateCommentByAdmin(Long commentId, CommentAdminRequest dto) {
         Comment comment = findCommentById(commentId);
-        User user = findUserById(comment.getUserId());
-        Event event = findEventById(comment.getEventId());
+        User user = findUserById(comment.getUser().getId());
+        Event event = findEventById(comment.getEvent().getId());
 
         if (dto.getMessage() != null) {
             comment.setAdminMessage(dto.getMessage());
@@ -139,8 +139,8 @@ public class CommentService {
 
     public CommentDto getCommentByAdmin(Long commentId) {
         Comment comment = findCommentById(commentId);
-        User user = findUserById(comment.getUserId());
-        Event event = findEventById(comment.getEventId());
+        User user = findUserById(comment.getUser().getId());
+        Event event = findEventById(comment.getEvent().getId());
 
         return CommentMapper
                 .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
@@ -150,8 +150,8 @@ public class CommentService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         return commentRepository.getCommentsAdmin(pageable).stream()
                 .map(comment -> {
-                    User user = findUserById(comment.getUserId());
-                    Event event = findEventById(comment.getEventId());
+                    User user = findUserById(comment.getUser().getId());
+                    Event event = findEventById(comment.getEvent().getId());
                     return CommentMapper.toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
                 }).collect(Collectors.toList());
     }
