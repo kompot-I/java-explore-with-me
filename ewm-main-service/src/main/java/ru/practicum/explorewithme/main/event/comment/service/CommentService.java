@@ -102,8 +102,7 @@ public class CommentService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<CommentShortResponseDto> comments = commentRepository.getEventComments(eventId, pageable).stream()
                 .map(comment -> {
-                    Long userId = comment.getUser().getId();
-                    User user = findUserById(userId);
+                    User user = comment.getUser();
                     return CommentMapper.toCommentShortResponseDto(comment, UserMapper.toUserShortDto(user));
                 }).toList();
         return EventShortCommentsResponseDto.builder()
@@ -115,8 +114,8 @@ public class CommentService {
     @Transactional
     public CommentDto updateCommentByAdmin(Long commentId, CommentAdminRequest dto) {
         Comment comment = findCommentById(commentId);
-        User user = findUserById(comment.getUser().getId());
-        Event event = findEventById(comment.getEvent().getId());
+        User user = comment.getUser();
+        Event event = comment.getEvent();
 
         if (dto.getMessage() != null) {
             comment.setAdminMessage(dto.getMessage());
@@ -139,8 +138,8 @@ public class CommentService {
 
     public CommentDto getCommentByAdmin(Long commentId) {
         Comment comment = findCommentById(commentId);
-        User user = findUserById(comment.getUser().getId());
-        Event event = findEventById(comment.getEvent().getId());
+        User user = comment.getUser();
+        Event event = comment.getEvent();
 
         return CommentMapper
                 .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
@@ -150,8 +149,8 @@ public class CommentService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         return commentRepository.getCommentsAdmin(pageable).stream()
                 .map(comment -> {
-                    User user = findUserById(comment.getUser().getId());
-                    Event event = findEventById(comment.getEvent().getId());
+                    User user = comment.getUser();
+                    Event event = comment.getEvent();
                     return CommentMapper.toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
                 }).collect(Collectors.toList());
     }
