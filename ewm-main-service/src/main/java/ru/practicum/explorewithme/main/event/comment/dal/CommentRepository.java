@@ -1,9 +1,9 @@
-package ru.practicum.explorewithme.main.comment.dal;
+package ru.practicum.explorewithme.main.event.comment.dal;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.explorewithme.main.comment.model.Comment;
+import ru.practicum.explorewithme.main.event.comment.model.Comment;
 
 import java.util.List;
 

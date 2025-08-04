@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.comment.service;
+package ru.practicum.explorewithme.main.event.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.main.comment.dal.CommentRepository;
-import ru.practicum.explorewithme.main.comment.dto.*;
-import ru.practicum.explorewithme.main.comment.model.Comment;
+import ru.practicum.explorewithme.main.event.comment.dal.CommentRepository;
+import ru.practicum.explorewithme.main.event.comment.dto.*;
+import ru.practicum.explorewithme.main.event.comment.model.Comment;
 import ru.practicum.explorewithme.main.event.dal.EventRepository;
 import ru.practicum.explorewithme.main.event.dto.EventMapper;
 import ru.practicum.explorewithme.main.event.model.Event;
@@ -34,10 +34,8 @@ public class CommentService {
 
     @Transactional
     public CommentDto createCommentPrivate(Long userId, Long eventId, CommentUserRequest dto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+        User user = findUserById(userId);
+        Event event = findEventById(eventId);
 
         Comment comment = CommentMapper.toCommentModel(dto);
         comment.setUserId(userId);
@@ -53,12 +51,9 @@ public class CommentService {
 
     @Transactional
     public CommentDto updateCommentPrivate(Long userId, Long eventId, Long commentId, CommentUserRequest dto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Not found comment with Id " + commentId));
+        User user = findUserById(userId);
+        Event event = findEventById(eventId);
+        Comment comment = findCommentById(commentId);
 
         if (!comment.getUserId().equals(userId)) {
             throw new ConflictException("Cannot edit other users' comments");
@@ -75,12 +70,9 @@ public class CommentService {
     }
 
     public CommentDto getCommentPrivate(Long userId, Long eventId, Long commentId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Not found comment with Id " + commentId));
+        User user = findUserById(userId);
+        Event event = findEventById(eventId);
+        Comment comment = findCommentById(commentId);
 
         if (!comment.getUserId().equals(userId)) {
             throw new ConflictException("Cannot access other users' comments.");
@@ -91,10 +83,8 @@ public class CommentService {
     }
 
     public EventCommentFullListResponseDto getCommentsPrivate(Long userId, Long eventId, Integer from, Integer size) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+        User user = findUserById(userId);
+        Event event = findEventById(eventId);
 
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<CommentFullResponseDto> comments = commentRepository.getEventUserComments(eventId, userId, pageable).stream()
@@ -107,15 +97,13 @@ public class CommentService {
     }
 
     public EventShortCommentsResponseDto getEventComments(Long eventId, Integer from, Integer size) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+        Event event = findEventById(eventId);
 
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<CommentShortResponseDto> comments = commentRepository.getEventComments(eventId, pageable).stream()
                 .map(comment -> {
                     Long userId = comment.getUserId();
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
+                    User user = findUserById(userId);
                     return CommentMapper.toCommentShortResponseDto(comment, UserMapper.toUserShortDto(user));
                 }).toList();
         return EventShortCommentsResponseDto.builder()
@@ -125,16 +113,10 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto updateCommentAdmin(Long commentId, CommentAdminRequest dto) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Not found comment with Id " + commentId));
-
-        Long userId = comment.getUserId();
-        Long eventId = comment.getEventId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+    public CommentDto updateCommentByAdmin(Long commentId, CommentAdminRequest dto) {
+        Comment comment = findCommentById(commentId);
+        User user = findUserById(comment.getUserId());
+        Event event = findEventById(comment.getEventId());
 
         if (dto.getMessage() != null) {
             comment.setAdminMessage(dto.getMessage());
@@ -150,37 +132,42 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteCommentAdmin(Long commentId) {
-        commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Not found comment with Id " + commentId));
+    public void deleteCommentByAdmin(Long commentId) {
+        findCommentById(commentId);
         commentRepository.deleteById(commentId);
     }
 
-    public CommentDto getCommentAdmin(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Not found comment with Id " + commentId));
-        Long userId = comment.getUserId();
-        Long eventId = comment.getEventId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+    public CommentDto getCommentByAdmin(Long commentId) {
+        Comment comment = findCommentById(commentId);
+        User user = findUserById(comment.getUserId());
+        Event event = findEventById(comment.getEventId());
 
         return CommentMapper
                 .toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
     }
 
-    public Collection<CommentDto> getCommentsAdmin(Integer from, Integer size) {
+    public Collection<CommentDto> getCommentsByAdmin(Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         return commentRepository.getCommentsAdmin(pageable).stream()
                 .map(comment -> {
-                    Long userId = comment.getUserId();
-                    Long eventId = comment.getEventId();
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
-                    Event event = eventRepository.findById(eventId)
-                            .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+                    User user = findUserById(comment.getUserId());
+                    Event event = findEventById(comment.getEventId());
                     return CommentMapper.toCommentDto(comment, UserMapper.toUserShortDto(user), EventMapper.toEventSummaryDto(event));
                 }).collect(Collectors.toList());
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Not found user with Id " + userId));
+    }
+
+    private Event findEventById(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Not found event with Id " + eventId));
+    }
+
+    private Comment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Not found comment with Id " + commentId));
     }
 }

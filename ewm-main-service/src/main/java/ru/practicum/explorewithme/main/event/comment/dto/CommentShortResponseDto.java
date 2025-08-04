@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.comment.dto;
+package ru.practicum.explorewithme.main.event.comment.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,12 +8,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class CommentFullResponseDto {
+public class CommentShortResponseDto {
     private Long id;
     private LocalDateTime createdDate;
-    private LocalDateTime modifyDate;
     private UserShortDto user;
-    private String userMessage;
-    private String adminMessage;
-    private Boolean accepted;
+    private String message;
 }

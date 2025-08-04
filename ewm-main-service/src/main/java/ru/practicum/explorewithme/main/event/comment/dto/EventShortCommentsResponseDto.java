@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.comment.dto;
+package ru.practicum.explorewithme.main.event.comment.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class EventCommentFullListResponseDto {
+public class EventShortCommentsResponseDto {
     private EventSummaryDto event;
-    private List<CommentFullResponseDto> comments;
+    private List<CommentShortResponseDto> comments;
 }

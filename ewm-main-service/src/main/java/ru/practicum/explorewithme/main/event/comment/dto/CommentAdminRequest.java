@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.comment.dto;
+package ru.practicum.explorewithme.main.event.comment.dto;
 
 import lombok.Builder;
 import lombok.Data;

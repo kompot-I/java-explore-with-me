@@ -1,7 +1,7 @@
-package ru.practicum.explorewithme.main.comment.dto;
+package ru.practicum.explorewithme.main.event.comment.dto;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.explorewithme.main.comment.model.Comment;
+import ru.practicum.explorewithme.main.event.comment.model.Comment;
 import ru.practicum.explorewithme.main.event.dto.EventSummaryDto;
 import ru.practicum.explorewithme.main.user.dto.UserShortDto;
 

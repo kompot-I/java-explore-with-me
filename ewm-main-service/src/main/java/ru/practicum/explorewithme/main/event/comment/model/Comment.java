@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.comment.model;
+package ru.practicum.explorewithme.main.event.comment.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
